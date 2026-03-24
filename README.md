@@ -56,13 +56,13 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement add function in Subscriber repository.`
     -   [x] Commit: `Implement list_all function in Subscriber repository.`
     -   [x] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [x] Commit: `Create Notification service struct skeleton.`
+    -   [x] Commit: `Implement subscribe function in Notification service.`
+    -   [x] Commit: `Implement subscribe function in Notification controller.`
+    -   [x] Commit: `Implement unsubscribe function in Notification service.`
+    -   [x] Commit: `Implement unsubscribe function in Notification controller.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
     -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
@@ -81,5 +81,12 @@ This is the place for you to write reflections:
 2. Id and URL are intended to be unique identifiers for the related Objects. If we use a Vec (list), CRUD operations would require iteration through the whole Vec just to find a match or enforce uniqueness. This can negatively impact the speed if there are large amounts of data. By using a DashMap, which is a highly optimised HashMap that can run concurrently, we can make use of these unique Id and URLs. Their unique nature can act as a key for the DashMap. This means CRUD operations and uniqueness checks can be done much faster, since find, insertions, and deletions work in O(1) complexity in maps.  
 3. Singleton pattern and DashMaps are both necessary, especially in Rust, where the compiler enforces thread safety. We want to make sure that the contents of the database stay consistent to prevent data discrepancies. Additionally, we must be able to handle situations where multiple services might try to add or delete a subscriber at the exact same time. The Singleton pattern ensures that only a single instance of the database is present globally, while DashMaps ensures that read and write operations can be done concurrently by multiple threads. 
 #### Reflection Publisher-2
-
+1. The separation of Service and Repository is tied to the concept of separation of concerns and single responsibility principle. In a traditional MVC compound pattern, the Model alone would be responsible for database connections and business logic at the same time. This means we have a Class that has multiple responsibilities. This could negatively impact development, such as difficulty in testing. Separating them can simplify responsibilities:
+   - Model becomes a simple class that acts as a representation of the data in the database.
+   - Repository is responsible for data accesses and data storing operations (CRUD) with the database.  
+   - Services acts as the business logic core. It specifies what should happen in a certain condition. For example, when a product is added, get subscribers from the repository, then trigger notifications. 
+This way, the code is much more easier to read, more modular, and easier to test, since we can use mocks.
+2. If we only use Model for this case, the code would become more complex. For example, the already existing Product struct would need new functions to able to access the database. Then, it would also need the business logic of sending notifications to each subscriber. This means the models of Product, Subscriber, and Notification would become tightly coupled. A single bug could break the entire process and testing it would be very difficult, since we wouldn't exactly know where the source of the problem is. Other than that, if plan to add another type of product then we must redo or check all the logic and database access mechanisms so it would fit the new product type. 
+3. I have used Postman, it has helped me test my work accurately. It basically simulates API requests to the project and we can see if it is responding correctly. Useful features in Postman that I am interested in are the Collections and Workspaces feature. This feature allows me to save API requests, JSONs, and such in a workspace. It is convenient to use, just like unit tests. This ensures that testing is done consistently with no mistakes such as forgetting to test case. This is surely going to be helpful during collaborative work and future software engineering projects, since each member can have consistent test cases. 
 #### Reflection Publisher-3
+
