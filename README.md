@@ -48,14 +48,14 @@ You can install Postman via this website: https://www.postman.com/downloads/
     (You might want to use `cargo check` if you only need to verify your work without running the app.)
 
 ## Mandatory Checklists (Publisher)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
+-   [x] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Subscriber model struct.`
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
-    -   [ ] Commit: `Implement list_all function in Subscriber repository.`
-    -   [ ] Commit: `Implement delete function in Subscriber repository.`
+    -   [x] Commit: `Create Subscriber model struct.`
+    -   [x] Commit: `Create Notification model struct.`
+    -   [x] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
+    -   [x] Commit: `Implement add function in Subscriber repository.`
+    -   [x] Commit: `Implement list_all function in Subscriber repository.`
+    -   [x] Commit: `Implement delete function in Subscriber repository.`
     -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
@@ -77,7 +77,9 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
-
+1. Based on the Observer Design Pattern, Subscriber is often defined as an interface (or trait in Rust), however, it is not needed in this Bambangshop case. In the Bambangshop project, the subscribers aren't local objects that have different behaviours, they are separate web services that is represented by a name and a given url (in model/subsriber.rs). This means that the publisher will interact with the subscriber by sending an HTTP payload to that given url. Since this interaction will be identical for every subscriber, then the use of a trait won't be necessary. However, if we plan to create different types of subscribers locally, such as SubscriberEmail, then we must implement a trait to establish a subscriber contract. 
+2. Id and URL are intended to be unique identifiers for the related Objects. If we use a Vec (list), CRUD operations would require iteration through the whole Vec just to find a match or enforce uniqueness. This can negatively impact the speed if there are large amounts of data. By using a DashMap, which is a highly optimised HashMap that can run concurrently, we can make use of these unique Id and URLs. Their unique nature can act as a key for the DashMap. This means CRUD operations and uniqueness checks can be done much faster, since find, insertions, and deletions work in O(1) complexity in maps.  
+3. Singleton pattern and DashMaps are both necessary, especially in Rust, where the compiler enforces thread safety. We want to make sure that the contents of the database stay consistent to prevent data discrepancies. Additionally, we must be able to handle situations where multiple services might try to add or delete a subscriber at the exact same time. The Singleton pattern ensures that only a single instance of the database is present globally, while DashMaps ensures that read and write operations can be done concurrently by multiple threads. 
 #### Reflection Publisher-2
 
 #### Reflection Publisher-3
